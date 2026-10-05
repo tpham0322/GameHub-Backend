@@ -52,7 +52,40 @@ const addToCollection = async (req, res) => {
   }
 };
 
+const updateCollection = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const collectionItem = await Collection.findOne({
+      _id: id,
+      user: req.user.id
+    });
+
+    if (!collectionItem) {
+      return res.status(404).json({
+        message: "Collection item not found"
+      });
+    }
+
+    if (status) {
+      collectionItem.status = status;
+    }
+
+    await collectionItem.save();
+
+    const populatedItem = await collectionItem.populate("game");
+
+    res.json(populatedItem);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
   getCollection,
-  addToCollection
+  addToCollection,
+  updateCollection
 };
