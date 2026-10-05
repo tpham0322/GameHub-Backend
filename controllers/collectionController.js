@@ -5,7 +5,7 @@ const getCollection = async (req, res) => {
   try {
     const collection = await Collection.find({
       user: req.user.id
-    }).populate("game");
+    }).populate("game")
 
     res.json(collection);
   } catch (error) {
@@ -84,8 +84,36 @@ const updateCollection = async (req, res) => {
   }
 };
 
+const deleteFromCollection = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const collectionItem = await Collection.findOne({
+      _id: id,
+      user: req.user.id
+    });
+
+    if (!collectionItem) {
+      return res.status(404).json({
+        message: "Collection item not found"
+      });
+    }
+
+    await collectionItem.deleteOne();
+
+    res.json({
+      message: "Game removed from collection"
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
   getCollection,
   addToCollection,
-  updateCollection
+  updateCollection,
+  deleteFromCollection
 };
