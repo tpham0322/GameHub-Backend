@@ -9,6 +9,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const gameRoutes = require("./routes/gameRoutes");
 
 const app = express();
 
@@ -25,6 +26,9 @@ app.get("/", (req, res) => {
 
 // Auth routes
 app.use("/api/auth", authRoutes);
+
+// Game routes
+app.use("/api/games", gameRoutes);
 
 const PORT = process.env.PORT || 5000;
 
