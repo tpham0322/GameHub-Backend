@@ -10,6 +10,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const gameRoutes = require("./routes/gameRoutes");
+const collectionRoutes = require("./routes/collectionRoutes");
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.use("/api/auth", authRoutes);
 
 // Game routes
 app.use("/api/games", gameRoutes);
+
+app.use("/api/collection", collectionRoutes);
 
 const PORT = process.env.PORT || 5000;
 
