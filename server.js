@@ -11,6 +11,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const gameRoutes = require("./routes/gameRoutes");
 const collectionRoutes = require("./routes/collectionRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -31,7 +32,11 @@ app.use("/api/auth", authRoutes);
 // Game routes
 app.use("/api/games", gameRoutes);
 
+// Collection routes
 app.use("/api/collection", collectionRoutes);
+
+// Review routes
+app.use("/api/games", reviewRoutes);
 
 const PORT = process.env.PORT || 5000;
 
