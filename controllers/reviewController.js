@@ -64,7 +64,80 @@ const createReview = async (req, res) => {
   }
 };
 
+const updateReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rating, comment } = req.body;
+
+    const review = await Review.findOne({
+      _id: id,
+      user: req.user.id
+    });
+
+    if (!review) {
+      return res.status(404).json({
+        message: "Review not found"
+      });
+    }
+
+    if (rating) {
+      review.rating = rating;
+    }
+
+    if (comment !== undefined) {
+      review.comment = comment;
+    }
+
+    await review.save();
+
+    await review.populate([
+      {
+        path: "user",
+        select: "username"
+      },
+      {
+        path: "game"
+      }
+    ]);
+
+    res.json(review);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+const deleteReview = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const review = await Review.findOne({
+      _id: id,
+      user: req.user.id
+    });
+
+    if (!review) {
+      return res.status(404).json({
+        message: "Review not found"
+      });
+    }
+
+    await review.deleteOne();
+
+    res.json({
+      message: "Review deleted successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
   getReviews,
-  createReview
+  createReview,
+  updateReview,
+  deleteReview
 };
