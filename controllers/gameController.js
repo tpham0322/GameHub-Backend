@@ -54,7 +54,7 @@ const getGameById = async (req, res) => {
         releaseDate: rawgGame.released
       },
       {
-        new: true,
+        returnDocument: "after",
         upsert: true
       }
     );
