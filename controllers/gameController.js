@@ -1,4 +1,5 @@
 const axios = require("axios");
+const Game = require("../models/Game");
 
 const searchGames = async (req, res) => {
   try {
@@ -37,7 +38,32 @@ const getGameById = async (req, res) => {
       }
     );
 
-    res.json(response.data);
+    const rawgGame = response.data;
+
+    const savedGame = await Game.findOneAndUpdate(
+      { rawgId: rawgGame.id },
+      {
+        rawgId: rawgGame.id,
+        title: rawgGame.name,
+        description: rawgGame.description,
+        image: rawgGame.background_image,
+        genres: rawgGame.genres.map((genre) => genre.name),
+        platforms: rawgGame.platforms.map(
+          (platform) => platform.platform.name
+        ),
+        releaseDate: rawgGame.released
+      },
+      {
+        new: true,
+        upsert: true
+      }
+    );
+
+    res.json({
+      ...rawgGame,
+      databaseId: savedGame._id
+    });
+
   } catch (error) {
     console.error("RAWG API error:", error.message);
 
